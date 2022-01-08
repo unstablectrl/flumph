@@ -6,9 +6,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Fira Code', '-apple-system', 'sans-serif'],
+        sans: ['-apple-system', 'sans-serif'],
         serif: ['serif'],
-        mono: ['monospace'],
+        mono: ['Fira Code', 'monospace'],
       },
     },
   },
