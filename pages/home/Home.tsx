@@ -82,7 +82,7 @@ const Home: FC<HomeProps> = () => {
           onChange={newValue => setValue(newValue)}
         >
           <Editable
-            className="p-5 rounded-xl bg-neutral-900"
+            className="p-5 rounded-xl bg-neutral-50 dark:bg-neutral-900"
             autoFocus
             renderElement={renderElement}
             onKeyDown={onKeyDown}
