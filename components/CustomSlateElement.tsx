@@ -11,8 +11,11 @@ export const Element: FC<RenderElementProps> = props => {
 }
 const CodeElement: FC<RenderElementProps> = ({ children, attributes }) => {
   return (
-    <pre {...attributes}>
-      <code className="font-mono bg-stone-700 rounded p-1">{children}</code>
+    <pre
+      {...attributes}
+      className="font-mono bg-neutral-200 dark:bg-neutral-700 rounded p-1"
+    >
+      <code>{children}</code>
     </pre>
   )
 }

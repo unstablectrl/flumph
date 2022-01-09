@@ -66,7 +66,7 @@ const Home: FC<HomeProps> = () => {
   )
 
   return (
-    <div className="">
+    <div className="container m-auto">
       <Head>
         <title>Editords</title>
       </Head>
@@ -75,7 +75,7 @@ const Home: FC<HomeProps> = () => {
           <a>Links</a>
         </Link>
       </div>
-      <div className="container m-auto">
+      <div className="px-10">
         <Slate
           editor={editor}
           value={value}
