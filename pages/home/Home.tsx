@@ -12,6 +12,7 @@ import {
 } from 'react'
 import type { BaseEditor, Descendant } from 'slate'
 import { createEditor } from 'slate'
+import { withHistory } from 'slate-history'
 import type { ReactEditor } from 'slate-react'
 import { Editable, Slate, withReact } from 'slate-react'
 
@@ -22,7 +23,8 @@ const Home: FC<HomeProps> = () => {
   // Workaround for fast reloads
   // https://github.com/ianstormtaylor/slate/issues/4081
   const editorRef = useRef<BaseEditor & ReactEditor>()
-  if (!editorRef.current) editorRef.current = withReact(createEditor())
+  if (!editorRef.current)
+    editorRef.current = withReact(withHistory(createEditor()))
   const editor = editorRef.current
 
   // With local storage there is a miss match from the server that prints a
