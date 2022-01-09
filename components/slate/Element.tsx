@@ -5,6 +5,8 @@ export const Element: FC<RenderElementProps> = props => {
   switch (props.element.type) {
     case 'code':
       return <CodeElement {...props} />
+    case 'border':
+      return <BorderElement {...props} />
     default:
       return <DefaultElement {...props} />
   }
@@ -17,6 +19,16 @@ const CodeElement: FC<RenderElementProps> = ({ children, attributes }) => {
     >
       <code>{children}</code>
     </pre>
+  )
+}
+const BorderElement: FC<RenderElementProps> = ({ children, attributes }) => {
+  return (
+    <div
+      {...attributes}
+      className="border-2 border-neutral-600 dark:border-neutral-200 rounded"
+    >
+      {children}
+    </div>
   )
 }
 

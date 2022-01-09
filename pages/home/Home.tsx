@@ -72,6 +72,12 @@ const Home: FC<HomeProps> = () => {
         break
       }
 
+      case 'o': {
+        event.preventDefault()
+        CustomEditor.toggleBorderBlock(editor)
+        break
+      }
+
       case 'b': {
         event.preventDefault()
         CustomEditor.toggleBoldMark(editor)
@@ -88,12 +94,12 @@ const Home: FC<HomeProps> = () => {
       <Head>
         <title>Editords</title>
       </Head>
-      <div className="p-5">
-        <Link href="/">
-          <a>Links</a>
-        </Link>
-      </div>
-      <div className="px-5">
+      <div className="p-5 pt-5 space-y-4">
+        <div>
+          <Link href="/">
+            <a>Links</a>
+          </Link>
+        </div>
         <Slate editor={editor} value={value} onChange={slateOnChange}>
           <Editable
             className="p-5 rounded-xl bg-neutral-50 dark:bg-neutral-900"
