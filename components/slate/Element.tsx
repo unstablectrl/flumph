@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { RenderElementProps } from 'slate-react'
+import type { RenderElementProps } from 'slate-react'
 
 export const Element: FC<RenderElementProps> = props => {
   switch (props.element.type) {
@@ -23,3 +23,5 @@ const CodeElement: FC<RenderElementProps> = ({ children, attributes }) => {
 const DefaultElement: FC<RenderElementProps> = ({ attributes, children }) => {
   return <p {...attributes}>{children}</p>
 }
+
+export default Element
