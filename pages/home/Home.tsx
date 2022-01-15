@@ -172,7 +172,7 @@ const Home: FC<HomeProps> = () => {
           </Link>
         </div>
         <Slate editor={editor} value={value} onChange={slateOnChange}>
-          <div className="mb-5 flex space-x-4">
+          <div className="mb-5 flex space-x-4 overflow-auto">
             <Button onMouseDown={e => handleOnClick(e, 'transform')}>
               transform
             </Button>
