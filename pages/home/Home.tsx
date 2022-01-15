@@ -1,7 +1,10 @@
+import Button from 'components/atoms/Button'
 import { CustomEditor, Element, Leaf } from 'components/slate'
 import useStorage from 'hooks/useStorage'
+import isHotkey from 'is-hotkey'
 import Head from 'next/head'
 import Link from 'next/link'
+import type { MouseEvent } from 'react'
 import {
   FC,
   KeyboardEvent,
@@ -10,13 +13,20 @@ import {
   useRef,
   useState,
 } from 'react'
-import type { BaseEditor, Descendant } from 'slate'
-import { createEditor } from 'slate'
+import { BaseEditor, createEditor, Descendant, Editor, Transforms } from 'slate'
 import { withHistory } from 'slate-history'
 import type { ReactEditor } from 'slate-react'
 import { Editable, Slate, withReact } from 'slate-react'
+import { hasOwnProperty } from 'utils/typescript'
 
 interface HomeProps {}
+
+const HOTKEYS: Record<string, string> = {
+  'mod+b': 'bold',
+  'mod+i': 'italic',
+  'mod+u': 'underline',
+  'mod+`': 'code',
+}
 
 const Home: FC<HomeProps> = () => {
   // Create a Slate editor object that won't change across renders.
@@ -62,13 +72,20 @@ const Home: FC<HomeProps> = () => {
   }
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    for (const hotkey in HOTKEYS) {
+      if (isHotkey(hotkey, event)) {
+        event.preventDefault()
+        const mark = HOTKEYS[hotkey]
+        CustomEditor.toggleMark(editor, mark)
+      }
+    }
     if (event.key === '&') {
       event.preventDefault()
       editor.insertText('and')
     }
     if (!event.ctrlKey) return
     switch (event.key) {
-      case '`': {
+      case ']': {
         event.preventDefault()
         CustomEditor.toggleCodeBlock(editor)
         break
@@ -80,11 +97,63 @@ const Home: FC<HomeProps> = () => {
         break
       }
 
-      case 'b': {
-        event.preventDefault()
-        CustomEditor.toggleBoldMark(editor)
+      // case 'b': {
+      //   event.preventDefault()
+      //   CustomEditor.toggleBoldMark(editor)
+      //   break
+      // }
+    }
+  }
+  const handleOnClick = (e: MouseEvent<HTMLButtonElement>, action: string) => {
+    e.stopPropagation()
+    e.preventDefault()
+    switch (action) {
+      case 'transform':
+        console.log('transform')
+        const { selection } = editor
+        if (!selection) return false
+        Transforms.unwrapNodes(editor, {
+          at: Editor.unhangRange(editor, selection), // Path of Editor
+          match: node => {
+            debugger
+            return (
+              !Editor.isEditor(node) &&
+              hasOwnProperty(node, 'children') &&
+              node.children?.every(child => Editor.isBlock(editor, child))
+            )
+          },
+          mode: 'all', // also the Editor's children
+        })
         break
-      }
+      case 'select':
+        console.log('select')
+        Transforms.select(editor, {
+          anchor: { path: [0, 0], offset: 0 },
+          focus: { path: [2, 0], offset: 1 },
+        })
+        break
+      case 'move':
+        console.log('move')
+        Transforms.move(editor, {
+          distance: 3,
+          unit: 'word',
+          reverse: true,
+        })
+        break
+      case 'isBlockActive':
+        console.log('isBlockActive', CustomEditor.isBlockActive(editor, 'code'))
+        break
+      case 'NumberedList':
+        console.log(
+          'toggleBlock numbered-list',
+          CustomEditor.toggleBlock(editor, 'numbered-list'),
+        )
+        break
+      case 'CodeBlock':
+        console.log('CodeBlock', CustomEditor.toggleBlock(editor, 'code'))
+        break
+      default:
+        break
     }
   }
 
@@ -103,6 +172,25 @@ const Home: FC<HomeProps> = () => {
           </Link>
         </div>
         <Slate editor={editor} value={value} onChange={slateOnChange}>
+          <div className="mb-5 flex space-x-4">
+            <Button onMouseDown={e => handleOnClick(e, 'transform')}>
+              transform
+            </Button>
+            <Button onMouseDown={e => handleOnClick(e, 'select')}>
+              select
+            </Button>
+            <Button onMouseDown={e => handleOnClick(e, 'move')}>move</Button>
+            <Button onMouseDown={e => handleOnClick(e, 'bold')}>bold</Button>
+            <Button onMouseDown={e => handleOnClick(e, 'isBlockActive')}>
+              isBlockCodeActive
+            </Button>
+            <Button onMouseDown={e => handleOnClick(e, 'NumberedList')}>
+              NumberedList
+            </Button>
+            <Button onMouseDown={e => handleOnClick(e, 'CodeBlock')}>
+              CodeBlock
+            </Button>
+          </div>
           <Editable
             className="p-5 rounded-xl bg-neutral-50 dark:bg-neutral-900"
             autoFocus

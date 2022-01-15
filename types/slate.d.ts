@@ -1,11 +1,22 @@
 import type { BaseEditor, Descendant } from 'slate'
 import type { ReactEditor } from 'slate-react'
 
-export type CodeElement = { type: 'code'; children: CustomText[] }
+export type CodeElement = { type: 'code'; children: Descendant[] }
 export type BorderElement = { type: 'border'; children: Descendant[] }
 export type DefaultElement = { type: 'paragraph'; children: CustomText[] }
 
-export type CustomElement = CodeElement | BorderElement | DefaultElement
+export type NumberedListElement = {
+  type: 'numbered-list'
+  children: Descendant[]
+}
+export type ListItemElement = { type: 'list-item'; children: Descendant[] }
+
+export type CustomElement =
+  | CodeElement
+  | BorderElement
+  | NumberedListElement
+  | ListItemElement
+  | DefaultElement
 
 export type CustomText = {
   bold?: boolean
